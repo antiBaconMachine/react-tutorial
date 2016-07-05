@@ -13,10 +13,64 @@
   </head>
   <body>
     <div id="content"></div>
-    <script type="text/babel" src="scripts/example.js"></script>
+    <!-- <script type="text/babel" src="scripts/example.js"></script> -->
     <script type="text/babel">
-      // To get started with this tutorial running your own code, simply remove
-      // the script tag loading scripts/example.js and start writing code here.
+
+        const CommentBox = React.createClass({
+            render: function() {
+                return (
+                    <div className="commentBox">
+                        <h1>
+                            I'm using React. I'm so stoked about that. Yay. No really.
+                        </h1>
+                        <CommentList data={this.props.data}/>
+                        <CommentForm />
+                    </div>
+                )
+            }
+        });
+        
+        const CommentList = React.createClass({
+            render: function() { 
+
+                const commentNodes = this.props.data.map(comment => 
+                    <Comment author={comment.author} key={comment.id}>
+                        {comment.text}
+                    </Comment>
+                );
+
+                return (
+                    <div className="commentList">
+                        {commentNodes}
+                    </div>
+                )
+            }
+        });
+
+        const CommentForm = React.createClass({
+            render: () => <div className="commentForm"></div>
+        });
+
+        class Comment extends React.Component {
+            render() {
+                return (
+                    <div className="comment">
+                        <h2 className="commentAuthor">{this.props.author}</h2>
+                        {this.props.children}
+                    </div>
+                );
+            }
+        }
+
+        const data = [
+            {id: 1, author: "some dude", text: "This framework absolutely won't rot, it's the last framework we'll ever need"},
+            {id: 2, author: "dogman lonelybones", text: "You shut your mouth #react4life"}
+        ];
+        
+        ReactDOM.render(
+            <CommentBox data={data} />,
+            document.getElementById('content')
+        );
     </script>
   </body>
 </html>
