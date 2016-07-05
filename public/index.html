@@ -17,17 +17,27 @@
     <script type="text/babel">
 
         const CommentBox = React.createClass({
+
+            getInitialState: function() {
+                return {data: []}
+            },
+
+            componentDidMount: function() {
+                fetch(this.props.url).then(resp => resp.json()).then(data => this.setState({data}));
+            },
+
             render: function() {
                 return (
                     <div className="commentBox">
                         <h1>
                             I'm using React. I'm so stoked about that. Yay. No really.
                         </h1>
-                        <CommentList data={this.props.data}/>
+                        <CommentList data={this.state.data}/>
                         <CommentForm />
                     </div>
                 )
             }
+
         });
         
         const CommentList = React.createClass({
@@ -68,7 +78,7 @@
         ];
         
         ReactDOM.render(
-            <CommentBox data={data} />,
+            <CommentBox url="/api/comments" />,
             document.getElementById('content')
         );
     </script>
