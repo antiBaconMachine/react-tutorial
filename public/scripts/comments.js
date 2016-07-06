@@ -13,7 +13,7 @@ const CommentBox = React.createClass({
     handleCommentSubmit(comment) {
         fetch(this.props.url, {
             method: "POST",
-            body: JSON.stringify(comment)
+            body: new FormData(document.getElementById('commentForm')) 
         }).then(resp => resp.json()).then(data => this.setState({data}));
     },
 
@@ -93,9 +93,9 @@ class CommentForm extends React.Component {
     
     render() {
         return (
-            <form className="commentForm" onSubmit={this.handleSubmit.bind(this)}>
-                <input type="text" placeholder="Your Name" value={this.state.author} onChange={this.handleAuthorChange.bind(this)} />
-                <input type="text" placeholder="Say something" value={this.state.text} onChange={this.handleTextChange.bind(this)} />
+            <form className="commentForm" id="commentForm" onSubmit={this.handleSubmit.bind(this)}>
+                <input type="text" name="author" placeholder="Your Name" value={this.state.author} onChange={this.handleAuthorChange.bind(this)} />
+                <input type="text" name="text" placeholder="Say something" value={this.state.text} onChange={this.handleTextChange.bind(this)} />
                 <input type="submit" value="Post" />
             </form>
         );
