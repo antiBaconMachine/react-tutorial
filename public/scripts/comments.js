@@ -10,11 +10,19 @@ const CommentBox = React.createClass({
         fetch(this.props.url).then(resp => resp.json()).then(data => this.setState({data}));
     },
 
-    handleCommentSubmit(data) {
+    handleCommentSubmit(comment) {
+        const comments = this.state.data;
+        comment.id = Date.now();
+        this.setState({data: comments.concat([comment])});
+
+        const data = new FormData();
+        data.append('author', comment.author);
+        data.append('text', comment.text);
+
         fetch(this.props.url, {
             method: "POST",
             body: data 
-        }).then(resp => resp.json()).then(data => this.setState({data}));
+        }).then(resp => resp.json(), e => comments).then(data => this.setState({data}));
     },
 
     render: function() {
@@ -85,10 +93,7 @@ class CommentForm extends React.Component {
         if (!author || !text) {
             return ;
         }
-        const data = new FormData();
-        data.append('author', author);
-        data.append('text', text);
-        this.props.onCommentSubmit(data);
+        this.props.onCommentSubmit({author, text});
         this.resetState();
     }
     
