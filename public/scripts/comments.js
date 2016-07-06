@@ -10,6 +10,13 @@ const CommentBox = React.createClass({
         fetch(this.props.url).then(resp => resp.json()).then(data => this.setState({data}));
     },
 
+    handleCommentSubmit(comment) {
+        fetch(this.props.url, {
+            method: "POST",
+            body: JSON.stringify(comment)
+        }).then(resp => resp.json()).then(data => this.setState({data}));
+    },
+
     render: function() {
         return (
             <div className="commentBox">
@@ -17,7 +24,7 @@ const CommentBox = React.createClass({
                     I'm using React. I'm so stoked about that. Yay. No really.
                 </h1>
                 <CommentList data={this.state.data}/>
-                <CommentForm />
+                <CommentForm onCommentSubmit={this.handleCommentSubmit} />
             </div>
         )
     }
@@ -41,10 +48,6 @@ const CommentList = React.createClass({
     }
 });
 
-const CommentForm = React.createClass({
-    render: () => <div className="commentForm"></div>
-});
-
 class Comment extends React.Component {
     render() {
         return (
@@ -56,6 +59,49 @@ class Comment extends React.Component {
     }
 }
 
+class CommentForm extends React.Component {
+
+    constructor(){
+        super();
+        this.resetState();
+    }
+
+    resetState(){
+        this.state = {author: '', text: ''};
+    }
+
+
+    handleAuthorChange(e) {
+        this.setState({author: e.target.value}, () => console.log(this.state));
+    }
+
+    handleTextChange(e) {
+        this.setState({text: e.target.value}, () => console.log(this.state));
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        console.log(this.state);
+        const author = this.state.author.trim();
+        const text = this.state.text.trim();
+        if (!author || !text) {
+            return ;
+        }
+        this.props.onCommentSubmit({author, text});
+        this.resetState();
+    }
+    
+    render() {
+        return (
+            <form className="commentForm" onSubmit={this.handleSubmit.bind(this)}>
+                <input type="text" placeholder="Your Name" value={this.state.author} onChange={this.handleAuthorChange.bind(this)} />
+                <input type="text" placeholder="Say something" value={this.state.text} onChange={this.handleTextChange.bind(this)} />
+                <input type="submit" value="Post" />
+            </form>
+        );
+    }
+}
+                
 ReactDOM.render(
     <CommentBox url="/api/comments" />,
     document.getElementById('content')
