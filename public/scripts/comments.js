@@ -56,11 +56,6 @@ class Comment extends React.Component {
     }
 }
 
-const data = [
-    {id: 1, author: "some dude", text: "This framework absolutely won't rot, it's the last framework we'll ever need"},
-    {id: 2, author: "dogman lonelybones", text: "You shut your mouth #react4life"}
-];
-
 ReactDOM.render(
     <CommentBox url="/api/comments" />,
     document.getElementById('content')
